@@ -30,14 +30,15 @@ exports.createUser = async (req, res, next) => {
     },
   ])
 
+  if (error) {
+    return res.status(401).send({ msg: "could not create user" })
+  }
+
   if (data) {
     res.status(201).json({
       msg: "user created successfully",
     })
   }
 
-  if (error) {
-    return res.status(401).send({ msg: "could create user" })
-  }
   next()
 }
