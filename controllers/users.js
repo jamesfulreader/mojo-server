@@ -26,8 +26,6 @@ exports.createUser = async (req, res, next) => {
   const salt = await bcryptjs.genSalt(10)
   const hash = await bcryptjs.hash(password, salt)
 
-  console.log(`HASH ${hash} PASS ${password}`)
-
   const { data, error } = await supabase.from("User").insert([
     {
       first_name: req.body.first_name,
