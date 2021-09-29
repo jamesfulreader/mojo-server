@@ -1,4 +1,5 @@
 const { createClient } = require("@supabase/supabase-js")
+const bcryptjs = require("bcryptjs")
 const dotenv = require("dotenv")
 
 dotenv.config({ path: "../config/config.env" })
@@ -21,11 +22,17 @@ exports.getUsers = async (req, res, next) => {
 }
 
 exports.createUser = async (req, res, next) => {
+  let password = req.body.password
+  const salt = await bcryptjs.genSalt(10)
+  const hash = await bcryptjs.hash(password, salt)
+
+  console.log(`HASH ${hash} PASS ${password}`)
+
   const { data, error } = await supabase.from("User").insert([
     {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      password: req.body.password,
+      password: hash,
       username: req.body.username,
     },
   ])
