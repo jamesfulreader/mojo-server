@@ -49,9 +49,12 @@ exports.createUser = async (req, res, next) => {
 }
 
 exports.getUser = async (req, res, next) => {
-  let userID = req.body.id
+  let userID = req.params.id
 
-  let { data, error } = await supabase.from("User").match({ id: userID })
+  let { data, error } = await supabase
+    .from("User")
+    .select("*")
+    .match({ id: userID })
 
   if (error) {
     return res.status(400).send({ msg: "no data found" })
