@@ -47,3 +47,17 @@ exports.createUser = async (req, res, next) => {
 
   next()
 }
+
+exports.getUser = async (req, res, next) => {
+  let userID = req.body.id
+
+  let { data, error } = await supabase.from("User").match({ id: userID })
+
+  if (error) {
+    return res.status(400).send({ msg: "no data found" })
+  }
+
+  if (data) {
+    return res.status(200).json({ data })
+  }
+}
