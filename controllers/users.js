@@ -64,3 +64,18 @@ exports.getUser = async (req, res, next) => {
     return res.status(200).json({ data })
   }
 }
+
+exports.updateUser = async (req, res, next) => {
+  let userID = req.params.id
+
+  let password = req.body.password
+  const salt = await bcryptjs.genSalt(10)
+  const hash = await bcryptjs.hash(password, salt)
+
+  let { data, error } = await supabase.from("User").update({
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    password: hash,
+    username: req.body.username,
+  })
+}
