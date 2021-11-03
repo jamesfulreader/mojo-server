@@ -2,8 +2,10 @@ const { createClient } = require("@supabase/supabase-js")
 const dotenv = require("dotenv")
 const { createCipheriv, randomBytes, createDecipheriv } = require("crypto")
 
-const key = randomBytes(32)
-const iv = randomBytes(16)
+const key = randomBytes(32) // need to have set key
+const iv = randomBytes(16) // need to have set IV 
+// TODO
+// set key and IV so that can cipher decipher a user
 const cipher = createCipheriv("aes256", key, iv)
 const decipher = createDecipheriv('aes256', key, iv)
 
