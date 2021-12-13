@@ -9,7 +9,7 @@ const {
 dotenv.config({ path: "../config/config.env" });
 const resizedIV = randomBytes(16);
 const key = createHash("sha256").update(process.env.M_KEY).digest();
-const iv = createHash("sha256").update(process.env.M_IV).digest();
+let iv = createHash("sha256").update(process.env.M_IV).digest();
 
 iv.copy(resizedIV);
 
