@@ -57,7 +57,6 @@ exports.getUser = async (req, res, next) => {
 		.match({ id: userID })
 
 	if (error) {
-		console.log(data)
 		return res.status(400).send({ msg: 'no data found' })
 	}
 
