@@ -1,28 +1,7 @@
 const { createClient } = require('@supabase/supabase-js')
 const dotenv = require('dotenv')
-const { publicEncrypt, publicDecrypt } = require('crypto')
-const { publicKey, privateKey } = require('../config/keypair')
+const { encrypt, decrypt } = require('../config/encryptionHandler')
 dotenv.config({ path: '../config/config.env' })
-// const resizedIV = randomBytes(16)
-// const key = createHash('sha256').update(process.env.M_KEY).digest()
-// let iv = createHash('sha256').update(process.env.M_IV).digest()
-
-// iv.copy(resizedIV)
-function securePassword(password) {
-	const encryptedData = publicEncrypt(
-		publicKey,
-		Buffer.from(password, 'base64')
-	)
-
-	const resultPassword = encryptedData.toString('hex')
-	return resultPassword
-}
-function unsecurePassword(password) {
-	const decryptedData = publicDecrypt(privateKey, password)
-
-	const resultPassword = decryptedData.toString('uft-8')
-	return resultPassword
-}
 
 const supabase = createClient(
 	process.env.SUPABASE_URL,
@@ -43,17 +22,16 @@ exports.getUsers = async (req, res, next) => {
 
 exports.createUser = async (req, res, next) => {
 	let password = req.body.password
-	// let encryptPass
-	// const cipher = createCipheriv('aes256', key, resizedIV)
-	// encryptPass = cipher.update(password, 'binary', 'hex') + cipher.final('hex')
-	const encryptPass = securePassword(password)
+
+	const encryptData = encrypt(password)
 
 	const { data, error } = await supabase.from('User').insert([
 		{
 			first_name: req.body.first_name,
 			last_name: req.body.last_name,
-			password: encryptPass,
+			password: encryptData.password,
 			username: req.body.username,
+			iv: encryptData.iv,
 		},
 	])
 
@@ -72,8 +50,8 @@ exports.createUser = async (req, res, next) => {
 
 exports.getUser = async (req, res, next) => {
 	let userID = req.params.id
-	// let passUnEncrypt = ''
-	// const decipher = createDecipheriv('aes256', key, resizedIV)
+
+	console.log('userID ' + userID)
 
 	const { data, error } = await supabase
 		.from('User')
@@ -81,31 +59,34 @@ exports.getUser = async (req, res, next) => {
 		.match({ id: userID })
 
 	if (error) {
+		console.log(data)
 		return res.status(400).send({ msg: 'no data found' })
 	}
 
 	if (data) {
-		const passUnEncrypt = unsecurePassword(data[0].password)
-		// 	decipher.update(data[0].password, 'hex', 'binary') +
-		// 	decipher.final('binary')
-		// return res.status(200).json({ data, passUnEncrypt })
-		return passUnEncrypt
+		const encryption = {
+			password: data[0].password,
+			iv: data[0].iv,
+		}
+		const decryptData = decrypt(encryption)
+		res.status(201).json({
+			data,
+			decryptData,
+		})
 	}
 }
 
 exports.updateUser = async (req, res, next) => {
 	let userID = req.params.id
 	let password = req.body.password
-	// const cipher = createCipheriv('aes256', key, resizedIV)
 
-	// password = cipher.update(password, 'utf8', 'hex') + cipher.final('hex')
-
-	const encryptPass = securePassword(password)
+	const encryptData = encrypt(password)
 
 	let { data, error } = await supabase.from('User').update({
 		first_name: req.body.first_name,
 		last_name: req.body.last_name,
-		password: encryptPass,
+		password: encryptData.password,
 		username: req.body.username,
+		iv: encryptData.iv,
 	})
 }
