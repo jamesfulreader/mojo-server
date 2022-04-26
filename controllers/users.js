@@ -66,10 +66,13 @@ exports.getUser = async (req, res, next) => {
 			password: data[0].password,
 			iv: data[0].iv,
 		}
-		let firstName = data[0].first_name
-		let lastName = data[0].last_name
-		let username = data[0].username
+
+		const firstName = data[0].first_name
+		const lastName = data[0].last_name
+		const username = data[0].username
+
 		const decryptData = decrypt(encryption)
+
 		res.status(201).json({
 			firstName,
 			lastName,
