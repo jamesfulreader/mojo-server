@@ -51,8 +51,6 @@ exports.createUser = async (req, res, next) => {
 exports.getUser = async (req, res, next) => {
 	let userID = req.params.id
 
-	console.log('userID ' + userID)
-
 	const { data, error } = await supabase
 		.from('User')
 		.select('*')
