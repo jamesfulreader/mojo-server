@@ -66,6 +66,7 @@ exports.getUser = async (req, res, next) => {
 			iv: data[0].iv,
 		}
 
+		const id = data[0].id
 		const firstName = data[0].first_name
 		const lastName = data[0].last_name
 		const username = data[0].username
@@ -73,6 +74,7 @@ exports.getUser = async (req, res, next) => {
 		const decryptData = decrypt(encryption)
 
 		res.status(201).json({
+			id,
 			firstName,
 			lastName,
 			username,
