@@ -21,7 +21,7 @@ exports.getUsers = async (req, res, next) => {
 }
 
 exports.createUser = async (req, res, next) => {
-	let password = req.body.password
+	const password = req.body.password
 
 	const encryptData = encrypt(password)
 
@@ -49,7 +49,7 @@ exports.createUser = async (req, res, next) => {
 }
 
 exports.getUser = async (req, res, next) => {
-	let userID = req.params.id
+	const userID = req.params.id
 
 	const { data, error } = await supabase
 		.from('User')
@@ -82,27 +82,28 @@ exports.getUser = async (req, res, next) => {
 }
 
 exports.updateUser = async (req, res, next) => {
-	let userID = req.params.id
+	const userID = req.params.id
+	const password = req.body.password
+	const encryptData = encrypt(password)
 
 	const { data, error } = await supabase
 		.from('User')
-		.select('*')
-		.match({ id: userID })
-
-	if (error) {
-		console.log(data)
-		return res.status(400).send({ msg: 'no data found' })
-	}
-
-	if (data) {
-		const encryptData = encrypt(password)
-
-		update({
+		.update({
 			first_name: req.body.first_name,
 			last_name: req.body.last_name,
 			password: encryptData.password,
 			username: req.body.username,
 			iv: encryptData.iv,
+		})
+		.match({ id: userID })
+
+	if (error) {
+		return res.status(400).send({ msg: 'no data found' })
+	}
+
+	if (data) {
+		res.status(200).json({
+			msg: 'user updated',
 		})
 	}
 }
