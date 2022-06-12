@@ -65,8 +65,8 @@ exports.getUser = async (req, res, next) => {
 			password: data[0].password,
 			iv: data[0].iv,
 		}
-    
-    const id = data[0].id
+
+		const id = data[0].id
 		const firstName = data[0].first_name
 		const lastName = data[0].last_name
 		const username = data[0].username
@@ -125,11 +125,6 @@ exports.deleteUser = async (req, res, next) => {
 	if (data) {
 		return res.status(200).json({
 			msg: 'user deleted',
-		})
-	}
-
-		res.status(200).json({
-			msg: 'user updated',
 		})
 	}
 }
