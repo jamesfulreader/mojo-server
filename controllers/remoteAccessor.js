@@ -36,9 +36,50 @@ exports.createRemoteAccess = async (req, res, next) => {
 	next()
 }
 
-exports.getAllRemoteAccess = async (req, res, next) => {}
+exports.getAllRemoteAccess = async (req, res, next) => {
+	const { data, error } = await supabase.from('Remote Desktop').select('*')
 
-exports.getRemoteAccess = async (req, res, next) => {}
+	if (error) {
+		return res.status(400).send({ msg: 'no data found' })
+	}
+
+	if (data) {
+		return res.status(200).json({ data })
+	}
+}
+
+exports.getRemoteAccess = async (req, res, next) => {
+	const remoteAccessID = req.params.id
+
+	const { data, error } = await supabase
+		.from('Remote Desktop')
+		.select('*')
+		.match({ id: remoteAccessID })
+
+	if (error) {
+		return res.status(400).send({ msg: 'no data found' })
+	}
+
+	if (data) {
+		const encryption = {
+			password: data[0].password,
+			iv: data[0].iv,
+		}
+
+		const id = data[0].id
+		const compName = data[0].comp_name
+		const ipAddress = data[0].IP_address
+
+		const decryptData = decrypt(encryption)
+
+		res.status(201).json({
+			id,
+			compName,
+			ipAddress,
+			decryptData,
+		})
+	}
+}
 
 exports.updateRemoteAccess = async (req, res, next) => {}
 
