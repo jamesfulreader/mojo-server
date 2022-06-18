@@ -88,7 +88,12 @@ exports.updateRemoteAccess = async (req, res, next) => {
 
 	const { data, error } = await supabase
 		.from('Remote Desktop')
-		.update({})
+		.update({
+			comp_name: req.body.comp_name,
+			IP_address: req.body.IP_address,
+			iv: encryptData.iv,
+			password: encryptData.password,
+		})
 		.match({ id: remoteAccessID })
 
 	if (error) {
