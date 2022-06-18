@@ -81,6 +81,42 @@ exports.getRemoteAccess = async (req, res, next) => {
 	}
 }
 
-exports.updateRemoteAccess = async (req, res, next) => {}
+exports.updateRemoteAccess = async (req, res, next) => {
+	const remoteAccessID = req.params.id
+	const password = req.body.password
+	const encryptData = encrypt(password)
 
-exports.deleteRemoteAccess = async (req, res, next) => {}
+	const { data, error } = await supabase
+		.from('Remote Desktop')
+		.update({})
+		.match({ id: remoteAccessID })
+
+	if (error) {
+		return res.status(400).send({ msg: 'no data found' })
+	}
+
+	if (data) {
+		return res.status(200).json({
+			msg: 'remote access updated',
+		})
+	}
+}
+
+exports.deleteRemoteAccess = async (req, res, next) => {
+	const remoteAccessID = req.params.id
+
+	const { data, error } = await supabase
+		.from('Remote Desktop')
+		.delete()
+		.match({ id: remoteAccessID })
+
+	if (error) {
+		return res.status(400).send({ msg: 'no data found' })
+	}
+
+	if (data) {
+		return res.status(200).json({
+			msg: 'remote access deleted',
+		})
+	}
+}
