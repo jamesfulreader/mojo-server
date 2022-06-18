@@ -1,23 +1,22 @@
 {
-  "name": "mojo_server",
-  "version": "1.0.0",
-  "description": "Serverside app connected to supabase to store all information",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "author": "James Fulreader",
-  "license": "ISC",
-  "dependencies": {
-    "@supabase/supabase-js": "^1.22.6",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "node": "^16.9.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.12"
-  }
+	"name": "mojo_server",
+	"version": "1.0.0",
+	"description": "Serverside app connected to supabase to store all information",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js",
+		"dev": "nodemon server.js"
+	},
+	"author": "James Fulreader",
+	"license": "ISC",
+	"dependencies": {
+		"@supabase/supabase-js": "^1.22.6",
+		"cors": "^2.8.5",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"node": "^16.9.1"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.12"
+	}
 }
